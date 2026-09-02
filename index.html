@@ -321,7 +321,8 @@ function setDept(d){
   var sel=g("f-pos");
   sel.innerHTML="<option value=''>Select role...</option>";
   (DPOS[d]||[]).forEach(function(p){var o=document.createElement("option");o.textContent=p;sel.appendChild(o);});
-  resetForm(false);
+  scores={};rec=null;langs=[];exp=null;visa=null;
+  g("f-name").value="";g("f-nat").value="";g("f-gender").value="";g("f-pos").value="";
   window.scrollTo(0,0);
 }
 g("btn-foh").onclick=function(){setDept("FOH");};
