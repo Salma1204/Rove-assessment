@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rove Open Day Assessment</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#F4F6F8;color:#3C3C3B}
+.hdr{background:#617F90;padding:18px 28px;display:flex;justify-content:space-between;align-items:center}
+.hdr img{height:36px}
+.hdr-lbl{color:rgba(255,255,255,.72);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.tabs{background:#fff;border-bottom:1px solid #E0E0E0;display:flex}
+.tab{flex:1;padding:13px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:none;color:#888;border-bottom:3px solid transparent;font-family:Arial,sans-serif}
+.tab.on{color:#617F90;border-bottom-color:#617F90}
+.dbar{background:#4a6a7a;padding:12px 16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.dbtn{padding:9px 28px;border-radius:24px;border:2px solid rgba(255,255,255,.4);background:transparent;font-size:13px;font-weight:600;cursor:pointer;font-family:Arial,sans-serif;color:rgba(255,255,255,.8)}
+.dbtn.on{background:#fff;border-color:#fff;color:#617F90}
+.pg{display:none}.pg.on{display:block}
+.wrap{max-width:700px;margin:0 auto;padding:22px 16px}
+.dwrap{max-width:1100px;margin:0 auto;padding:22px 16px}
+.card{background:#fff;border:.5px solid #E0E0E0;border-radius:12px;padding:20px 24px;margin-bottom:16px}
+.clbl{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#617F90;margin-bottom:16px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fld{margin-bottom:14px}
+.flbl{font-size:12px;color:#888;display:block;margin-bottom:5px}
+input,select,textarea{width:100%;padding:10px 12px;border:.5px solid #CCC;border-radius:8px;font-size:14px;font-family:Arial,sans-serif;color:#3C3C3B;background:#fff;outline:none}
+input:focus,select:focus,textarea:focus{border-color:#617F90}
+textarea{resize:vertical;line-height:1.6;min-height:72px}
+.err{font-size:12px;color:#E24B4A;margin-top:4px;display:none}
+.err.on{display:block}
+.qblk{margin-bottom:26px;padding-bottom:26px;border-bottom:.5px solid #EEE}
+.qblk:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.qn{font-size:11px;font-weight:700;color:#617F90;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}
+.qt{font-size:16px;font-weight:700;margin-bottom:3px}
+.qs{font-size:13px;color:#617F90;font-style:italic;margin-bottom:4px}
+.qd{font-size:13px;color:#888;margin-bottom:14px;line-height:1.5}
+.slbl{font-size:12px;font-weight:600;margin-bottom:8px}
+.srow{display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
+.sbtn{width:44px;height:44px;border-radius:50%;border:2px solid #DDD;background:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;color:#888}
+.sbtn.on{background:#617F90;border-color:#617F90;color:#fff}
+.shint{display:flex;justify-content:space-between;font-size:11px;color:#AAA;margin-bottom:12px;padding:0 4px}
+.sw{font-size:12px;color:#617F90;font-weight:600;margin-left:8px}
+.wlbl{font-size:12px;font-weight:600;font-style:italic;margin-bottom:6px}
+.pills{display:flex;gap:7px;flex-wrap:wrap;margin-top:6px}
+.pill{padding:7px 14px;border-radius:20px;border:.5px solid #CCC;background:#fff;font-size:13px;cursor:pointer;font-family:Arial,sans-serif;color:#3C3C3B}
+.pill.on{background:#617F90;border-color:#617F90;color:#fff;font-weight:600}
+.rrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.rbtn{padding:10px 20px;border-radius:24px;border:2px solid #DDD;background:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:Arial,sans-serif;color:#888}
+.rbtn.on-sh{background:#1D9E75;border-color:#1D9E75;color:#fff}
+.rbtn.on-h{background:#378ADD;border-color:#378ADD;color:#fff}
+.rbtn.on-cf{background:#BA7517;border-color:#BA7517;color:#fff}
+.rbtn.on-dn{background:#E24B4A;border-color:#E24B4A;color:#fff}
+.savebtn{width:100%;padding:14px;border-radius:10px;border:none;background:#617F90;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:Arial,sans-serif;margin-top:4px}
+.savebtn.ok{background:#1D9E75}.savebtn.bad{background:#E24B4A}
+.savebtn:disabled{background:#AAA;cursor:not-allowed}
+.ov{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(97,127,144,.85);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.ov.on{display:flex}
+.spin{width:48px;height:48px;border:4px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.stxt{color:#fff;font-size:16px;font-weight:600}
+.dtop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.rfbtn{padding:8px 16px;border-radius:8px;border:2px solid #617F90;background:#fff;color:#617F90;font-size:13px;font-weight:600;cursor:pointer;font-family:Arial,sans-serif}
+.dcnt{font-size:13px;color:#888;margin-top:3px}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:24px}
+.st{background:#fff;border:.5px solid #E0E0E0;border-radius:10px;padding:13px 14px}
+.st.hl{background:#617F90}.st.gn{background:#1D9E75}
+.stl{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:#888;margin-bottom:4px}
+.st.hl .stl,.st.gn .stl{color:rgba(255,255,255,.75)}
+.stv{font-size:22px;font-weight:700;color:#3C3C3B}
+.st.hl .stv,.st.gn .stv{color:#fff}
+.sttl{font-size:13px;font-weight:700;color:#617F90;text-transform:uppercase;letter-spacing:.08em;margin:0 0 12px}
+.lb{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:24px}
+.lbc{background:#fff;border:.5px solid #E0E0E0;border-radius:12px;overflow:hidden}
+.lbh{background:#617F90;padding:12px 16px;color:#fff}
+.lbd{font-size:13px;font-weight:700;text-transform:uppercase}
+.lbs{font-size:11px;color:rgba(255,255,255,.7);margin-top:2px}
+.lbr{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:.5px solid #F0F0F0;cursor:pointer}
+.lbr:hover{background:#F9FBFC}.lbr:last-child{border-bottom:none}
+.rk{width:24px;height:24px;border-radius:50%;background:#EEF4F7;color:#617F90;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rk.g{background:#FFD700;color:#3C3C3B}.rk.s{background:#C0C0C0;color:#3C3C3B}.rk.b{background:#CD7F32;color:#fff}
+.lbn{flex:1;font-size:13px;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lbp{font-size:11px;color:#888}
+.lbsc{font-size:14px;font-weight:700;color:#617F90;text-align:right}
+.lbe{padding:20px;text-align:center;color:#AAA;font-size:13px}
+.cbar{background:#fff;border:.5px solid #E0E0E0;border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.cinf{flex:1;font-size:13px;color:#888}
+.cgobtn{padding:8px 18px;border-radius:8px;border:none;background:#617F90;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:Arial,sans-serif}
+.cgobtn:disabled{background:#CCC;cursor:not-allowed}
+.cclbtn{padding:8px 14px;border-radius:8px;border:1px solid #CCC;background:#fff;color:#888;font-size:13px;cursor:pointer;font-family:Arial,sans-serif}
+.flt{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.flt input,.flt select{flex:1 1 130px;padding:9px 11px;border:.5px solid #CCC;border-radius:8px;font-size:13px;font-family:Arial,sans-serif;outline:none;background:#fff}
+.ri{background:#fff;border:.5px solid #E0E0E0;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.ri:hover{border-color:#617F90}.ri.sel{border-color:#617F90;background:#EEF4F7}
+.ck{width:20px;height:20px;border-radius:4px;border:2px solid #CCC;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;font-size:12px;font-weight:700;color:#fff}
+.ck.on{background:#617F90;border-color:#617F90}
+.av{width:38px;height:38px;border-radius:50%;background:#617F90;color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rii{flex:1;min-width:0}
+.rin{font-weight:700;font-size:14px}
+.rim{font-size:12px;color:#888;margin-top:2px}
+.rsc{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap}
+.sc{font-size:11px;padding:2px 6px;border-radius:6px;background:#EEF4F7;color:#617F90;font-weight:600}
+.rav{font-size:18px;font-weight:700;color:#617F90;text-align:center;flex-shrink:0}
+.badge{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:600;white-space:nowrap;display:inline-block}
+.db{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:600;background:#EEF4F7;color:#617F90;margin-right:4px}
+.detbtn{font-size:11px;padding:4px 10px;border-radius:6px;background:none;border:1px solid #617F90;color:#617F90;cursor:pointer;font-family:Arial,sans-serif;flex-shrink:0}
+.emp{text-align:center;padding:3rem 0;color:#AAA;font-size:14px}
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:999;overflow-y:auto;padding:20px}
+.modal.on{display:block}
+.mbox{background:#fff;border-radius:14px;max-width:960px;margin:0 auto;overflow:hidden}
+.mbox2{background:#fff;border-radius:14px;max-width:650px;margin:0 auto;overflow:hidden}
+.mhdr{background:#617F90;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+.mtit{color:#fff;font-size:16px;font-weight:700}
+.mcls{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1;padding:0 6px;font-family:Arial,sans-serif}
+.mbdy{padding:20px;overflow-x:auto}
+.ct{width:100%;border-collapse:collapse;min-width:420px}
+.ct th{background:#EEF4F7;padding:10px 12px;text-align:left;font-size:12px;font-weight:700;color:#617F90;text-transform:uppercase;border-bottom:2px solid #617F90}
+.ct td{padding:10px 12px;border-bottom:.5px solid #EEE;font-size:13px;vertical-align:top}
+.ct tr:last-child td{border-bottom:none}
+.rl{font-weight:600;background:#FAFAFA}
+.sv{font-weight:700;font-size:15px}
+.wn{font-size:12px;color:#666;font-style:italic;margin-top:4px}
+.ar td{background:#EEF4F7;font-weight:700}
+.qd2{padding:12px 0;border-bottom:.5px solid #EEE}.qd2:last-child{border-bottom:none}
+.qdt{font-size:13px;font-weight:700;margin-bottom:6px}
+.qdr{display:flex;align-items:center;gap:8px}
+.scc{width:34px;height:34px;border-radius:50%;background:#617F90;color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.qdy{font-size:12px;color:#555;margin-top:7px;line-height:1.5;font-style:italic;background:#F9FBFC;border-radius:8px;padding:8px 10px}
+.spacer{height:40px}
+@media(max-width:700px){.g2{grid-template-columns:1fr}.lb{grid-template-columns:1fr}.hdr{padding:14px 16px}}
+</style>
+</head>
+<body>
+<div class="ov" id="ov"><div class="spin"></div><div class="stxt">Saving...</div></div>
+<div class="hdr">
+  <img src="data:image/png;base64,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" alt="Rove Hotels">
+  <div class="hdr-lbl">Open Day &mdash; Interview Assessment</div>
+</div>
+<div class="tabs">
+  <button class="tab on" id="tab-form">Assessment Form</button>
+  <button class="tab" id="tab-dash">Live Dashboard</button>
+</div>
+<div class="pg on" id="pg-form">
+  <div class="dbar">
+    <button class="dbtn" id="btn-foh">Front of House</button>
+    <button class="dbtn" id="btn-cul">Culinary</button>
+    <button class="dbtn" id="btn-fb">F&amp;B</button>
+  </div>
+  <div class="wrap">
+    <div id="no-dept" style="text-align:center;padding:4rem 0;color:#AAA">
+      <div style="font-size:48px;margin-bottom:16px">&#9757;</div>
+      <div style="font-size:16px;font-weight:600;color:#617F90">Select a department above to start</div>
+    </div>
+    <div id="form-body" style="display:none">
+      <div class="card">
+        <div class="clbl">Candidate Details</div>
+        <div class="g2">
+          <div class="fld"><label class="flbl">Full Name *</label><input id="f-name" placeholder="e.g. Mohammed Al Rashid"><div class="err" id="e-name">Required</div></div>
+          <div class="fld"><label class="flbl">Nationality</label><input id="f-nat" placeholder="e.g. Filipino, Indian"></div>
+          <div class="fld"><label class="flbl">Gender *</label><select id="f-gender"><option value="">Select...</option><option>Male</option><option>Female</option></select><div class="err" id="e-gender">Required</div></div>
+          <div class="fld"><label class="flbl">Department</label><input id="f-dept" readonly style="background:#EEF4F7;color:#617F90;font-weight:600;cursor:default"></div>
+          <div class="fld" style="grid-column:1/-1"><label class="flbl">Position Applied For *</label><select id="f-pos"><option value="">Select role...</option></select><div class="err" id="e-pos">Required</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="clbl">Quick Assessment</div>
+        <div class="fld">
+          <div style="font-size:14px;font-weight:600;margin-bottom:8px">Additional Languages</div>
+          <div class="pills" id="pills-lang">
+            <button class="pill" data-g="lang" data-v="Arabic">Arabic</button>
+            <button class="pill" data-g="lang" data-v="Tagalog">Tagalog</button>
+            <button class="pill" data-g="lang" data-v="Hindi">Hindi</button>
+            <button class="pill" data-g="lang" data-v="French">French</button>
+            <button class="pill" data-g="lang" data-v="Other">Other</button>
+            <button class="pill" data-g="lang" data-v="None">None</button>
+          </div>
+        </div>
+        <div class="fld" style="margin-top:16px">
+          <div style="font-size:14px;font-weight:600;margin-bottom:8px">Years of Experience *</div>
+          <div class="pills" id="pills-exp">
+            <button class="pill" data-g="exp" data-v="0-1 year">0-1 year</button>
+            <button class="pill" data-g="exp" data-v="1-3 years">1-3 years</button>
+            <button class="pill" data-g="exp" data-v="3-5 years">3-5 years</button>
+            <button class="pill" data-g="exp" data-v="5+ years">5+ years</button>
+          </div>
+          <div class="err" id="e-exp">Required</div>
+        </div>
+        <div class="fld" style="margin-top:16px">
+          <div style="font-size:14px;font-weight:600;margin-bottom:8px">Visa / Availability</div>
+          <div class="pills" id="pills-visa">
+            <button class="pill" data-g="visa" data-v="Visit Visa">Visit Visa</button>
+            <button class="pill" data-g="visa" data-v="Employment Visa">Employment Visa</button>
+            <button class="pill" data-g="visa" data-v="Immediate Joiner">Immediate Joiner</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="clbl">Assessment &mdash; Score 1 (Low) to 5 (Strong)</div>
+        <div class="qblk">
+          <div class="qn">Question 1</div><div class="qt">First Impression</div>
+          <div class="qd">How strong was the candidate's overall presence and first impression?</div>
+          <div class="slbl">Score *</div>
+          <div class="srow" id="sr-q1"><button class="sbtn" data-q="q1" data-v="1">1</button><button class="sbtn" data-q="q1" data-v="2">2</button><button class="sbtn" data-q="q1" data-v="3">3</button><button class="sbtn" data-q="q1" data-v="4">4</button><button class="sbtn" data-q="q1" data-v="5">5</button><span class="sw" id="sw-q1"></span></div>
+          <div class="shint"><span>1 - Low</span><span>5 - Strong</span></div>
+          <div class="err" id="e-q1">Score required</div>
+          <div class="wlbl">Why? (optional)</div><textarea id="why-q1" placeholder="Note your reasoning..."></textarea>
+        </div>
+        <div class="qblk">
+          <div class="qn">Question 2</div><div class="qt">Rovester Code</div>
+          <div class="qs">Reach out &bull; Energise &bull; Keep it simple &bull; Be your best self</div>
+          <div class="qd">How well does the candidate align with the Rovester Code?</div>
+          <div class="slbl">Score *</div>
+          <div class="srow" id="sr-q2"><button class="sbtn" data-q="q2" data-v="1">1</button><button class="sbtn" data-q="q2" data-v="2">2</button><button class="sbtn" data-q="q2" data-v="3">3</button><button class="sbtn" data-q="q2" data-v="4">4</button><button class="sbtn" data-q="q2" data-v="5">5</button><span class="sw" id="sw-q2"></span></div>
+          <div class="shint"><span>1 - Low</span><span>5 - Strong</span></div>
+          <div class="err" id="e-q2">Score required</div>
+          <div class="wlbl">Why? (optional)</div><textarea id="why-q2" placeholder="Note your reasoning..."></textarea>
+        </div>
+        <div class="qblk">
+          <div class="qn">Question 3</div><div class="qt">Our Rovers Drivers</div>
+          <div class="qs">Feel connected &bull; Feel at Ease &bull; Feel energised &bull; Can be themselves</div>
+          <div class="qd">How strong is the candidate's ability to create a positive Rover experience?</div>
+          <div class="slbl">Score *</div>
+          <div class="srow" id="sr-q3"><button class="sbtn" data-q="q3" data-v="1">1</button><button class="sbtn" data-q="q3" data-v="2">2</button><button class="sbtn" data-q="q3" data-v="3">3</button><button class="sbtn" data-q="q3" data-v="4">4</button><button class="sbtn" data-q="q3" data-v="5">5</button><span class="sw" id="sw-q3"></span></div>
+          <div class="shint"><span>1 - Low</span><span>5 - Strong</span></div>
+          <div class="err" id="e-q3">Score required</div>
+          <div class="wlbl">Why? (optional)</div><textarea id="why-q3" placeholder="Note your reasoning..."></textarea>
+        </div>
+        <div class="qblk">
+          <div class="qn">Question 4a</div><div class="qt">Role Fit &mdash; Skills</div>
+          <div class="qd">Does the candidate demonstrate the skills and capability required for the role?</div>
+          <div class="slbl">Score *</div>
+          <div class="srow" id="sr-q4a"><button class="sbtn" data-q="q4a" data-v="1">1</button><button class="sbtn" data-q="q4a" data-v="2">2</button><button class="sbtn" data-q="q4a" data-v="3">3</button><button class="sbtn" data-q="q4a" data-v="4">4</button><button class="sbtn" data-q="q4a" data-v="5">5</button><span class="sw" id="sw-q4a"></span></div>
+          <div class="shint"><span>1 - Low</span><span>5 - Strong</span></div>
+          <div class="err" id="e-q4a">Score required</div>
+          <div class="wlbl">Why? (optional)</div><textarea id="why-q4a" placeholder="Note your reasoning..."></textarea>
+        </div>
+        <div class="qblk">
+          <div class="qn">Question 4b</div><div class="qt">Role Fit &mdash; Growth</div>
+          <div class="qd">How would you rate the candidate's potential to learn, adapt and grow?</div>
+          <div class="slbl">Score *</div>
+          <div class="srow" id="sr-q4b"><button class="sbtn" data-q="q4b" data-v="1">1</button><button class="sbtn" data-q="q4b" data-v="2">2</button><button class="sbtn" data-q="q4b" data-v="3">3</button><button class="sbtn" data-q="q4b" data-v="4">4</button><button class="sbtn" data-q="q4b" data-v="5">5</button><span class="sw" id="sw-q4b"></span></div>
+          <div class="shint"><span>1 - Low</span><span>5 - Strong</span></div>
+          <div class="err" id="e-q4b">Score required</div>
+          <div class="wlbl">Why? (optional)</div><textarea id="why-q4b" placeholder="Note your reasoning..."></textarea>
+        </div>
+        <div class="qblk">
+          <div class="qn">Question 5</div><div class="qt">Culture Fit</div>
+          <div class="qd">Would you want this person representing Rove?</div>
+          <div class="slbl">Score *</div>
+          <div class="srow" id="sr-q5"><button class="sbtn" data-q="q5" data-v="1">1</button><button class="sbtn" data-q="q5" data-v="2">2</button><button class="sbtn" data-q="q5" data-v="3">3</button><button class="sbtn" data-q="q5" data-v="4">4</button><button class="sbtn" data-q="q5" data-v="5">5</button><span class="sw" id="sw-q5"></span></div>
+          <div class="shint"><span>1 - Low</span><span>5 - Strong</span></div>
+          <div class="err" id="e-q5">Score required</div>
+          <div class="wlbl">Why? (optional)</div><textarea id="why-q5" placeholder="Note your reasoning..."></textarea>
+        </div>
+      </div>
+      <div class="card">
+        <div class="clbl">Final Recommendation</div>
+        <div class="qd" style="margin-bottom:14px">What is your call? *</div>
+        <div class="rrow">
+          <button class="rbtn" data-rec="Strong Hire">Strong Hire</button>
+          <button class="rbtn" data-rec="Hire">Hire</button>
+          <button class="rbtn" data-rec="Consider Further">Consider Further</button>
+          <button class="rbtn" data-rec="Do Not Hire">Do Not Hire</button>
+        </div>
+        <div class="err" id="e-rec">Please select a recommendation</div>
+      </div>
+      <button class="savebtn" id="save-btn">Save Assessment</button>
+      <div class="spacer"></div>
+    </div>
+  </div>
+</div>
+<div class="pg" id="pg-dash">
+  <div class="dwrap">
+    <div class="dtop">
+      <div><h2 style="font-size:18px;font-weight:700">Live Assessment Dashboard</h2><div class="dcnt" id="dcnt">Click Refresh to load data</div></div>
+      <button class="rfbtn" id="rf-btn">Refresh</button>
+    </div>
+    <div class="sgrid" id="sgrid"></div>
+    <div class="sttl">Department Leaderboard</div>
+    <div class="lb" id="lboard"></div>
+    <div class="cbar"><div class="cinf" id="cinf">Tick up to 3 candidates to compare</div><button class="cclbtn" id="ccl">Clear</button><button class="cgobtn" id="cgo" disabled>Compare Selected</button></div>
+    <div class="flt">
+      <input id="srch" placeholder="Search by name...">
+      <select id="fdept"><option value="">All Departments</option><option>FOH</option><option>Culinary</option><option>F&amp;B</option></select>
+      <select id="fpos"><option value="">All Positions</option></select>
+      <select id="frec"><option value="">All Outcomes</option><option>Strong Hire</option><option>Hire</option><option>Consider Further</option><option>Do Not Hire</option></select>
+      <select id="fsrt"><option value="time">Latest first</option><option value="score">Top score</option><option value="name">Name A-Z</option></select>
+    </div>
+    <div id="rlist"></div>
+    <div class="spacer"></div>
+  </div>
+</div>
+<div class="modal" id="cmp-modal"><div class="mbox"><div class="mhdr"><div class="mtit">Head to Head Comparison</div><button class="mcls" id="cmp-cls">&times;</button></div><div class="mbdy" id="cmp-bdy"></div></div></div>
+<div class="modal" id="det-modal"><div class="mbox2"><div class="mhdr"><div class="mtit" id="det-ttl">Candidate Detail</div><button class="mcls" id="det-cls">&times;</button></div><div class="mbdy" id="det-bdy"></div></div></div>
+<script>
+var API="https://script.google.com/macros/s/AKfycbz6spRl1uDU2GTcBasaUNzq3bmZggM6FEskfHitISuf7PThUlwluqi-YnavUAHzGeSQvg/exec";
+var DPOS={"FOH":["Waiter / Waitress","Host / Hostess","Runner","Bartender","Any FOH Role"],"Culinary":["Commis Chef","Chef de Partie","Sous Chef","Pastry Chef","Kitchen Helper","Any Culinary Role"],"F&B":["Barista","Bartender","Steward","F&B Supervisor","Any F&B Role"]};
+var QKEYS=[{k:"Q1",l:"First Impression"},{k:"Q2",l:"Rovester Code"},{k:"Q3",l:"Rovers Drivers"},{k:"Q4a",l:"Role Fit Skills"},{k:"Q4b",l:"Role Fit Growth"},{k:"Q5",l:"Culture Fit"}];
+var SL={"1":"Low","2":"Below avg","3":"Average","4":"Good","5":"Strong"};
+var BDGE={"Strong Hire":"#1D9E75","Hire":"#378ADD","Consider Further":"#BA7517","Do Not Hire":"#E24B4A"};
+var RCLS={"Strong Hire":"on-sh","Hire":"on-h","Consider Further":"on-cf","Do Not Hire":"on-dn"};
+var allData=[],cmpIds=[],scores={},rec=null,dept=null,langs=[],exp=null,visa=null;
+function g(id){return document.getElementById(id);}
+function stars(n){var s="",nr=Math.round(parseFloat(n)||0);for(var i=1;i<=5;i++)s+="<span style='color:"+(i<=nr?"#EF9F27":"#DDD")+"'>&#9733;</span>";return s;}
+function ini(n){return(n||"").split(" ").slice(0,2).map(function(w){return w[0]?w[0].toUpperCase():"";}).join("");}
+function uid(r){var s=(r.Timestamp||"")+(r.Name||""),h=0;for(var i=0;i<s.length;i++)h=((h<<5)-h)+s.charCodeAt(i);return"u"+(h>>>0).toString(36);}
+function cnt(f,v){return allData.filter(function(r){return r[f]===v;}).length;}
+function getRec(id){return allData.find(function(r){return uid(r)===id;});}
+function mkSt(l,v,c){return"<div class='st "+c+"'><div class='stl'>"+l+"</div><div class='stv'>"+v+"</div></div>";}
+function showErr(id,on){var e=g(id);if(e){if(on)e.classList.add("on");else e.classList.remove("on");}}
+g("tab-form").onclick=function(){g("pg-form").classList.add("on");g("pg-dash").classList.remove("on");g("tab-form").classList.add("on");g("tab-dash").classList.remove("on");};
+g("tab-dash").onclick=function(){g("pg-dash").classList.add("on");g("pg-form").classList.remove("on");g("tab-dash").classList.add("on");g("tab-form").classList.remove("on");loadData();};
+function setDept(d){
+  dept=d;
+  document.querySelectorAll(".dbtn").forEach(function(b){b.classList.remove("on");});
+  var map={"FOH":"btn-foh","Culinary":"btn-cul","F&B":"btn-fb"};
+  g(map[d]).classList.add("on");
+  g("no-dept").style.display="none";
+  g("form-body").style.display="block";
+  g("f-dept").value=d;
+  var sel=g("f-pos");
+  sel.innerHTML="<option value=''>Select role...</option>";
+  (DPOS[d]||[]).forEach(function(p){var o=document.createElement("option");o.textContent=p;sel.appendChild(o);});
+  resetForm(false);
+  window.scrollTo(0,0);
+}
+g("btn-foh").onclick=function(){setDept("FOH");};
+g("btn-cul").onclick=function(){setDept("Culinary");};
+g("btn-fb").onclick=function(){setDept("F&B");};
+document.body.addEventListener("click",function(e){
+  var sbtn=e.target.closest(".sbtn");
+  if(sbtn){var q=sbtn.getAttribute("data-q"),v=parseInt(sbtn.getAttribute("data-v"));scores[q]=scores[q]===v?null:v;document.querySelectorAll("#sr-"+q+" .sbtn").forEach(function(b){b.classList.remove("on");});if(scores[q])sbtn.classList.add("on");var sw=g("sw-"+q);if(sw)sw.textContent=scores[q]?(SL[String(scores[q])]||""):"";showErr("e-"+q,false);return;}
+  var pill=e.target.closest(".pill");
+  if(pill){var grp=pill.getAttribute("data-g"),val=pill.getAttribute("data-v");if(grp==="lang"){var idx=langs.indexOf(val);if(idx>=0){langs.splice(idx,1);pill.classList.remove("on");}else{langs.push(val);pill.classList.add("on");}}else{if(grp==="exp")exp=exp===val?null:val;if(grp==="visa")visa=visa===val?null:val;document.querySelectorAll("#pills-"+grp+" .pill").forEach(function(b){b.classList.remove("on");});var cur=grp==="exp"?exp:visa;if(cur)pill.classList.add("on");showErr("e-"+grp,false);}return;}
+  var rbtn=e.target.closest(".rbtn[data-rec]");
+  if(rbtn){var rv=rbtn.getAttribute("data-rec");rec=rec===rv?null:rv;document.querySelectorAll(".rbtn[data-rec]").forEach(function(b){Object.values(RCLS).forEach(function(c){b.classList.remove(c);});});if(rec)rbtn.classList.add(RCLS[rec]);showErr("e-rec",false);return;}
+  var act=e.target.closest("[data-action]");
+  if(act){var action=act.getAttribute("data-action"),aid=act.getAttribute("data-id");if(action==="det")openDet(aid);if(action==="cmp")toggleCmp(aid);}
+});
+g("save-btn").onclick=function(){
+  var ok=true;
+  if(!g("f-name").value.trim()){showErr("e-name",true);ok=false;}
+  if(!g("f-gender").value){showErr("e-gender",true);ok=false;}
+  if(!g("f-pos").value){showErr("e-pos",true);ok=false;}
+  if(!exp){showErr("e-exp",true);ok=false;}
+  ["q1","q2","q3","q4a","q4b","q5"].forEach(function(q){if(!scores[q]){showErr("e-"+q,true);ok=false;}});
+  if(!rec){showErr("e-rec",true);ok=false;}
+  if(!ok){window.scrollTo(0,200);return;}
+  var avg=(["q1","q2","q3","q4a","q4b","q5"].reduce(function(s,q){return s+(scores[q]||0);},0)/6).toFixed(1);
+  var payload={Timestamp:new Date().toISOString(),Name:g("f-name").value.trim(),Nationality:g("f-nat").value.trim(),Gender:g("f-gender").value,Department:dept,Position:g("f-pos").value,Languages:langs.join(", ")||"None",Experience:exp||"",Visa:visa||"",Q1_Score:scores.q1,Q1_Why:g("why-q1").value.trim(),Q2_Score:scores.q2,Q2_Why:g("why-q2").value.trim(),Q3_Score:scores.q3,Q3_Why:g("why-q3").value.trim(),Q4a_Score:scores.q4a,Q4a_Why:g("why-q4a").value.trim(),Q4b_Score:scores.q4b,Q4b_Why:g("why-q4b").value.trim(),Q5_Score:scores.q5,Q5_Why:g("why-q5").value.trim(),Avg_Score:avg,Recommendation:rec};
+  var btn=g("save-btn");btn.disabled=true;g("ov").classList.add("on");
+  fetch(API,{method:"POST",body:JSON.stringify(payload)}).then(function(r){return r.json();}).then(function(d){g("ov").classList.remove("on");if(d.status==="success"){btn.textContent="Saved!";btn.classList.add("ok");setTimeout(function(){resetForm(true);btn.textContent="Save Assessment";btn.classList.remove("ok");btn.disabled=false;window.scrollTo(0,0);},1300);}else{saveFail(btn);}}).catch(function(){g("ov").classList.remove("on");saveFail(btn);});
+};
+function saveFail(btn){btn.textContent="Error - Try Again";btn.classList.add("bad");btn.disabled=false;setTimeout(function(){btn.textContent="Save Assessment";btn.classList.remove("bad");},3000);}
+function resetForm(kd){g("f-name").value="";g("f-nat").value="";g("f-gender").value="";g("f-pos").value="";scores={};rec=null;langs=[];exp=null;visa=null;["q1","q2","q3","q4a","q4b","q5"].forEach(function(q){document.querySelectorAll("#sr-"+q+" .sbtn").forEach(function(b){b.classList.remove("on");});var sw=g("sw-"+q);if(sw)sw.textContent="";showErr("e-"+q,false);var w=g("why-"+q);if(w)w.value="";});document.querySelectorAll(".pill").forEach(function(b){b.classList.remove("on");});document.querySelectorAll(".rbtn[data-rec]").forEach(function(b){Object.values(RCLS).forEach(function(c){b.classList.remove(c);});});["e-name","e-gender","e-pos","e-exp","e-rec"].forEach(function(id){showErr(id,false);});if(!kd){dept=null;document.querySelectorAll(".dbtn").forEach(function(b){b.classList.remove("on");});g("no-dept").style.display="block";g("form-body").style.display="none";}}
+g("rf-btn").onclick=loadData;
+g("srch").oninput=renderList;
+g("fdept").onchange=function(){updatePos();renderList();};
+g("fpos").onchange=renderList;
+g("frec").onchange=renderList;
+g("fsrt").onchange=renderList;
+g("ccl").onclick=function(){cmpIds=[];updateCmpBar();renderList();};
+g("cgo").onclick=openCmp;
+g("cmp-cls").onclick=function(){g("cmp-modal").classList.remove("on");};
+g("det-cls").onclick=function(){g("det-modal").classList.remove("on");};
+g("cmp-modal").onclick=function(e){if(e.target===this)this.classList.remove("on");};
+g("det-modal").onclick=function(e){if(e.target===this)this.classList.remove("on");};
+function loadData(){var btn=g("rf-btn");btn.textContent="Loading...";btn.disabled=true;fetch(API+"?t="+Date.now()).then(function(r){return r.json();}).then(function(d){allData=d.data||[];renderAll();g("dcnt").textContent=allData.length+" assessments loaded";btn.textContent="Refresh";btn.disabled=false;}).catch(function(){g("dcnt").textContent="Error loading - check connection";btn.textContent="Refresh";btn.disabled=false;});}
+function renderAll(){renderStats();renderBoard();renderList();}
+function renderStats(){var sh=cnt("Recommendation","Strong Hire"),h=cnt("Recommendation","Hire");g("sgrid").innerHTML=mkSt("Total",allData.length,"")+mkSt("FOH",cnt("Department","FOH"),"")+mkSt("Culinary",cnt("Department","Culinary"),"")+mkSt("F&B",cnt("Department","F&B"),"")+mkSt("Shortlisted",sh+h,"hl")+mkSt("Strong Hire",sh,"gn")+mkSt("Consider",cnt("Recommendation","Consider Further"),"")+mkSt("Do Not Hire",cnt("Recommendation","Do Not Hire"),"");}
+function renderBoard(){var depts=["FOH","Culinary","F&B"],html="",rk=["g","s","b","",""];depts.forEach(function(d){var rows=allData.filter(function(r){return r.Department===d;});rows.sort(function(a,b){return parseFloat(b.Avg_Score)-parseFloat(a.Avg_Score);});var top=rows.slice(0,5);html+="<div class='lbc'><div class='lbh'><div class='lbd'>"+d+"</div><div class='lbs'>"+rows.length+" assessed</div></div>";if(!top.length){html+="<div class='lbe'>No assessments yet</div>";}else{top.forEach(function(r,i){html+="<div class='lbr' data-action='det' data-id='"+uid(r)+"'><div class='rk "+(rk[i]||"")+"'>"+(i+1)+"</div><div style='flex:1;min-width:0'><div class='lbn'>"+r.Name+"</div><div class='lbp'>"+r.Position+"</div></div><div class='lbsc'>"+parseFloat(r.Avg_Score||0).toFixed(1)+"<br>"+stars(r.Avg_Score)+"</div></div>";});}html+="</div>";});g("lboard").innerHTML=html;}
+function updatePos(){var d=g("fdept").value,sel=g("fpos");sel.innerHTML="<option value=''>All Positions</option>";var list=d?(DPOS[d]||[]):Object.values(DPOS).reduce(function(a,b){return a.concat(b);},[]).filter(function(v,i,a){return a.indexOf(v)===i;});list.forEach(function(p){var o=document.createElement("option");o.textContent=p;sel.appendChild(o);});}
+function renderList(){var q=g("srch").value.toLowerCase(),fd=g("fdept").value,fp=g("fpos").value,fr=g("frec").value,fs=g("fsrt").value;var filtered=allData.filter(function(r){if(q&&!(r.Name||"").toLowerCase().includes(q))return false;if(fd&&r.Department!==fd)return false;if(fp&&r.Position!==fp)return false;if(fr&&r.Recommendation!==fr)return false;return true;});if(fs==="score")filtered.sort(function(a,b){return parseFloat(b.Avg_Score)-parseFloat(a.Avg_Score);});else if(fs==="name")filtered.sort(function(a,b){return(a.Name||"").localeCompare(b.Name||"");});if(!filtered.length){g("rlist").innerHTML="<div class='emp'>"+(allData.length?"No results.":"No data yet - click Refresh.")+"</div>";return;}var html="";filtered.forEach(function(r){var id=uid(r),on=cmpIds.indexOf(id)>=0,col=BDGE[r.Recommendation]||"#888";html+="<div class='ri"+(on?" sel":"")+"' data-id='"+id+"'><div class='ck"+(on?" on":"")+"' data-action='cmp' data-id='"+id+"'>"+(on?"&#10003;":"")+"</div><div class='av'>"+ini(r.Name)+"</div><div class='rii'><div class='rin'>"+(r.Name||"")+"</div><div class='rim'><span class='db'>"+(r.Department||"")+"</span>"+(r.Position||"")+(r.Nationality?" &middot; "+r.Nationality:"")+(r.Gender?" &middot; "+r.Gender:"")+"</div><div class='rsc'>";["Q1","Q2","Q3","Q4a","Q4b","Q5"].forEach(function(k){html+="<span class='sc'>"+k+":"+(r[k+"_Score"]||"-")+"</span>";});html+="</div></div><div class='rav'>"+parseFloat(r.Avg_Score||0).toFixed(1)+"<br><small style='font-size:11px;color:#AAA;font-weight:400'>/5</small><br>"+stars(r.Avg_Score)+"</div><span class='badge' style='color:"+col+";border:1px solid "+col+"'>"+r.Recommendation+"</span><button class='detbtn' data-action='det' data-id='"+id+"'>Detail</button></div>";});g("rlist").innerHTML=html;}
+function toggleCmp(id){var idx=cmpIds.indexOf(id);if(idx>=0)cmpIds.splice(idx,1);else{if(cmpIds.length>=3){alert("Max 3.");return;}cmpIds.push(id);}updateCmpBar();renderList();}
+function updateCmpBar(){var n=cmpIds.length;g("cinf").innerHTML=n===0?"Tick up to 3 candidates to compare":"<b>"+n+" selected</b>"+(n<2?" - pick at least 2":"");g("cgo").disabled=n<2;}
+function openCmp(){var recs=cmpIds.map(getRec).filter(Boolean);if(recs.length<2)return;var cols=recs.map(function(r){return"<th>"+r.Name+"<br><span style='font-size:11px;font-weight:400;color:#888'>"+r.Department+" | "+r.Position+"</span></th>";}).join("");var rows=QKEYS.map(function(q){var cells=recs.map(function(r){var s=r[q.k+"_Score"],why=r[q.k+"_Why"]||"";return"<td><div class='sv'>"+s+" <small style='color:#888'>"+(SL[String(s)]||"")+"</small></div>"+(why?"<div class='wn'>"+why+"</div>":"")+"</td>";}).join("");return"<tr><td class='rl'>"+q.l+"</td>"+cells+"</tr>";}).join("");var avgRow="<tr class='ar'><td class='rl'>Average</td>"+recs.map(function(r){return"<td><b>"+parseFloat(r.Avg_Score||0).toFixed(1)+"/5</b> "+stars(r.Avg_Score)+"</td>";}).join("")+"</tr>";var recRow="<tr><td class='rl'>Recommendation</td>"+recs.map(function(r){var c=BDGE[r.Recommendation]||"#888";return"<td><span class='badge' style='color:"+c+";border:1px solid "+c+"'>"+r.Recommendation+"</span></td>";}).join("")+"</tr>";g("cmp-bdy").innerHTML="<table class='ct'><thead><tr><th>Criteria</th>"+cols+"</tr></thead><tbody>"+rows+avgRow+recRow+"</tbody></table>";g("cmp-modal").classList.add("on");}
+function openDet(id){var r=getRec(id);if(!r)return;g("det-ttl").textContent=(r.Name||"")+" - "+(r.Department||"");var col=BDGE[r.Recommendation]||"#888";var html="<div style='display:flex;align-items:center;gap:14px;margin-bottom:16px;padding-bottom:14px;border-bottom:.5px solid #EEE'><div class='av' style='width:48px;height:48px;font-size:15px'>"+ini(r.Name)+"</div><div style='flex:1'><div style='font-size:17px;font-weight:700'>"+(r.Name||"")+"</div><div style='font-size:13px;color:#888;margin-top:3px'><span class='db'>"+(r.Department||"")+"</span>"+(r.Position||"")+(r.Nationality?" &middot; "+r.Nationality:"")+(r.Gender?" &middot; "+r.Gender:"")+"</div><div style='margin-top:8px'><span class='badge' style='color:"+col+";border:1px solid "+col+";font-size:13px;padding:4px 12px'>"+r.Recommendation+"</span></div></div><div style='text-align:right'><div style='font-size:26px;font-weight:700;color:#617F90'>"+parseFloat(r.Avg_Score||0).toFixed(1)+"<span style='font-size:13px;color:#AAA;font-weight:400'>/5</span></div>"+stars(r.Avg_Score)+"<div style='font-size:11px;color:#AAA;margin-top:2px'>avg score</div></div></div><div style='font-size:12px;color:#888;margin-bottom:14px'>Exp: "+(r.Experience||"-")+" | Languages: "+(r.Languages||"-")+" | Visa: "+(r.Visa||"-")+"</div>";QKEYS.forEach(function(q){var s=r[q.k+"_Score"],why=r[q.k+"_Why"]||"";html+="<div class='qd2'><div class='qdt'>"+q.l+"</div><div class='qdr'><div class='scc'>"+(s||"")+"</div><span style='font-size:13px;color:#617F90;font-weight:600;margin-right:4px'>"+(SL[String(s)]||"")+"</span>"+stars(s||0)+"</div>"+(why?"<div class='qdy'>"+why+"</div>":"")+"</div>";});html+="<div style='margin-top:14px;font-size:11px;color:#AAA'>Submitted: "+new Date(r.Timestamp).toLocaleString()+"</div>";g("det-bdy").innerHTML=html;g("det-modal").classList.add("on");}
+updatePos();
+setInterval(function(){if(g("pg-dash").classList.contains("on"))loadData();},30000);
+</script>
+</body>
+</html>
